@@ -72,7 +72,7 @@ class KubernetesClientConfigServerBootstrapper extends KubernetesConfigServerBoo
 		});
 		registry.registerIfAbsent(ConfigServerInstanceProvider.Function.class, context -> {
 			if (!getDiscoveryEnabled(context)) {
-				return (id) -> Collections.emptyList();
+				return id -> Collections.emptyList();
 			}
 			if (context.isRegistered(KubernetesInformerDiscoveryClient.class)) {
 				KubernetesInformerDiscoveryClient client = context.get(KubernetesInformerDiscoveryClient.class);
@@ -110,7 +110,7 @@ class KubernetesClientConfigServerBootstrapper extends KubernetesConfigServerBoo
 				}
 				catch (Exception e) {
 					LOG.warn("Error initiating informer discovery client", e);
-					return (serviceId) -> Collections.emptyList();
+					return serviceId -> Collections.emptyList();
 				}
 				finally {
 					sharedInformerFactory.stopAllRegisteredInformers();

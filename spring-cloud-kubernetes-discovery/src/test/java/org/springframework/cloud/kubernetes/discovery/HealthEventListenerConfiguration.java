@@ -31,7 +31,7 @@ import static org.springframework.cloud.kubernetes.commons.discovery.KubernetesD
 @TestConfiguration
 class HealthEventListenerConfiguration {
 
-	static boolean caught = false;
+	static boolean caught;
 
 	@Bean
 	HealthEventListener healthEventListener() {

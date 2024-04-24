@@ -35,7 +35,7 @@ public final class KubernetesClientServicesFunctionProvider {
 			Environment environment) {
 
 		if (properties.allNamespaces()) {
-			return (client) -> client.services().inAnyNamespace().withLabels(properties.serviceLabels());
+			return client -> client.services().inAnyNamespace().withLabels(properties.serviceLabels());
 		}
 
 		return client -> {
@@ -56,7 +56,7 @@ public final class KubernetesClientServicesFunctionProvider {
 			KubernetesNamespaceProvider namespaceProvider) {
 
 		if (properties.allNamespaces()) {
-			return (client) -> client.services().inAnyNamespace().withLabels(properties.serviceLabels());
+			return client -> client.services().inAnyNamespace().withLabels(properties.serviceLabels());
 		}
 
 		return client -> {

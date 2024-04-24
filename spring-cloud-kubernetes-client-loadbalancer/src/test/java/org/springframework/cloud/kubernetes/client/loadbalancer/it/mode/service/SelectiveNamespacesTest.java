@@ -165,7 +165,7 @@ class SelectiveNamespacesTest {
 				.bodyToMono(String.class).block();
 
 		// since selective namespaces is a Set, we need to be careful with assertion order
-		if (firstCallResult.equals("service-a-reached")) {
+		if ("service-a-reached".equals(firstCallResult)) {
 			Assertions.assertThat(secondCallResult).isEqualTo("service-b-reached");
 		}
 		else {

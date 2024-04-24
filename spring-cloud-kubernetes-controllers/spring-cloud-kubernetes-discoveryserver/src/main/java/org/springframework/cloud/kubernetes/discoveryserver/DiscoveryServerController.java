@@ -44,7 +44,7 @@ public class DiscoveryServerController {
 		return reactiveDiscoveryClient.getServices()
 				.flatMap(service -> reactiveDiscoveryClient.getInstances(service).collectList()
 						.flatMap(serviceInstances -> Mono.just(new Service(service,
-								serviceInstances.stream().map(x -> (DefaultKubernetesServiceInstance) x).toList()))));
+								serviceInstances.stream().map(DefaultKubernetesServiceInstance.class::cast).toList()))));
 	}
 
 	@GetMapping("/apps/{name}")

@@ -65,7 +65,7 @@ public class LeaderProperties {
 	 * Enable/disable publishing events in case leadership acquisition fails. Default:
 	 * false
 	 */
-	private boolean publishFailedEvents = false;
+	private boolean publishFailedEvents;
 
 	/**
 	 * Enable/disable creating ConfigMap if it does not exist. Default: true

@@ -80,7 +80,7 @@ public class KubernetesNamespaceProvider {
 			LOG.debug("Found service account namespace at: [" + serviceAccountNamespacePath + "].");
 
 			try {
-				namespace = new String(Files.readAllBytes((serviceAccountNamespacePath)));
+				namespace = new String(Files.readAllBytes(serviceAccountNamespacePath));
 				LOG.debug("Service account namespace value: " + serviceAccountNamespacePath);
 			}
 			catch (IOException ioe) {

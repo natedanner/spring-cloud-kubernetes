@@ -51,7 +51,7 @@ abstract class ConfigServerIntegrationTest {
 
 	@BeforeEach
 	void beforeEach() {
-		V1ConfigMapList TEST_CONFIGMAP = new V1ConfigMapList().addItemsItem(new V1ConfigMapBuilder()
+		V1ConfigMapList testConfigmap = new V1ConfigMapList().addItemsItem(new V1ConfigMapBuilder()
 				.withMetadata(new V1ObjectMetaBuilder().withName("test-cm").withNamespace("default")
 						.withResourceVersion("1").build())
 				.addToData("test-cm-dev.yaml",
@@ -64,7 +64,7 @@ abstract class ConfigServerIntegrationTest {
 						"dummy:\n  property:\n    string2: \"default\"\n    int2: 4\n    bool2: true\n")
 				.addToData("app.name", "test").build());
 
-		V1SecretList TEST_SECRET = new V1SecretListBuilder()
+		V1SecretList testSecret = new V1SecretListBuilder()
 				.withMetadata(new V1ListMetaBuilder().withResourceVersion("1").build())
 				.addToItems(new V1SecretBuilder()
 						.withMetadata(new V1ObjectMetaBuilder().withName("test-cm").withResourceVersion("0")
@@ -73,41 +73,41 @@ abstract class ConfigServerIntegrationTest {
 				.build();
 
 		WireMock.stubFor(get(urlMatching("^/api/v1/namespaces/default/configmaps.*"))
-				.willReturn(aResponse().withStatus(200).withBody(new JSON().serialize(TEST_CONFIGMAP))));
+				.willReturn(aResponse().withStatus(200).withBody(new JSON().serialize(testConfigmap))));
 
 		WireMock.stubFor(get(urlMatching("^/api/v1/namespaces/default/secrets.*"))
-				.willReturn(aResponse().withStatus(200).withBody(new JSON().serialize(TEST_SECRET))));
+				.willReturn(aResponse().withStatus(200).withBody(new JSON().serialize(testSecret))));
 	}
 
 	@Test
 	void enabled() {
 		Environment env = testRestTemplate.getForObject("/test-cm/default", Environment.class);
 		assertThat(env.getPropertySources().size()).isEqualTo(2);
-		assertThat(env.getPropertySources().get(0).getName().equals("configmap.test-cm.default.default")).isTrue();
+		assertThat("configmap.test-cm.default.default".equals(env.getPropertySources().get(0).getName())).isTrue();
 		assertThat(env.getPropertySources().get(0).getSource().get("app.name")).isEqualTo("test");
-		assertThat(env.getPropertySources().get(1).getName().equals("secret.test-cm.default.default")).isTrue();
+		assertThat("secret.test-cm.default.default".equals(env.getPropertySources().get(1).getName())).isTrue();
 		assertThat(env.getPropertySources().get(1).getSource().get("password")).isEqualTo("p455w0rd");
 		assertThat(env.getPropertySources().get(1).getSource().get("username")).isEqualTo("user");
 
 		Environment devprod = testRestTemplate.getForObject("/test-cm/dev,prod", Environment.class);
 		assertThat(devprod.getPropertySources().size()).isEqualTo(4);
-		assertThat(devprod.getPropertySources().get(0).getName().equals("configmap.test-cm.default.prod")).isTrue();
+		assertThat("configmap.test-cm.default.prod".equals(devprod.getPropertySources().get(0).getName())).isTrue();
 		assertThat(devprod.getPropertySources().get(0).getSource().size()).isEqualTo(3);
 		assertThat(devprod.getPropertySources().get(0).getSource().get("dummy.property.int2")).isEqualTo(3);
 		assertThat(devprod.getPropertySources().get(0).getSource().get("dummy.property.bool2")).isEqualTo(true);
 		assertThat(devprod.getPropertySources().get(0).getSource().get("dummy.property.string2")).isEqualTo("prod");
-		assertThat(devprod.getPropertySources().get(1).getName().equals("configmap.test-cm.default.dev")).isTrue();
+		assertThat("configmap.test-cm.default.dev".equals(devprod.getPropertySources().get(1).getName())).isTrue();
 		assertThat(devprod.getPropertySources().get(1).getSource().size()).isEqualTo(3);
 		assertThat(devprod.getPropertySources().get(1).getSource().get("dummy.property.int2")).isEqualTo(1);
 		assertThat(devprod.getPropertySources().get(1).getSource().get("dummy.property.bool2")).isEqualTo(false);
 		assertThat(devprod.getPropertySources().get(1).getSource().get("dummy.property.string2")).isEqualTo("dev");
-		assertThat(devprod.getPropertySources().get(2).getName().equals("configmap.test-cm.default.default")).isTrue();
+		assertThat("configmap.test-cm.default.default".equals(devprod.getPropertySources().get(2).getName())).isTrue();
 		assertThat(devprod.getPropertySources().get(2).getSource().size()).isEqualTo(4);
 		assertThat(devprod.getPropertySources().get(2).getSource().get("app.name")).isEqualTo("test");
 		assertThat(devprod.getPropertySources().get(2).getSource().get("dummy.property.int2")).isEqualTo(4);
 		assertThat(devprod.getPropertySources().get(2).getSource().get("dummy.property.bool2")).isEqualTo(true);
 		assertThat(devprod.getPropertySources().get(2).getSource().get("dummy.property.string2")).isEqualTo("default");
-		assertThat(devprod.getPropertySources().get(3).getName().equals("secret.test-cm.default.default")).isTrue();
+		assertThat("secret.test-cm.default.default".equals(devprod.getPropertySources().get(3).getName())).isTrue();
 		assertThat(devprod.getPropertySources().get(3).getSource().size()).isEqualTo(2);
 		assertThat(devprod.getPropertySources().get(3).getSource().get("password")).isEqualTo("p455w0rd");
 		assertThat(devprod.getPropertySources().get(3).getSource().get("username")).isEqualTo("user");

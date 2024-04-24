@@ -100,9 +100,8 @@ class KubernetesCatalogWatchAutoConfigurationTests {
 				"spring.cloud.discovery.blocking.enabled=false", "spring.cloud.discovery.reactive.enabled=true",
 				"spring.cloud.kubernetes.discovery.discovery-server-url=example.com",
 				"spring.cloud.kubernetes.http.discovery.catalog.watcher.enabled=true");
-		applicationContextRunner.run(context -> {
-			assertThat(context).hasSingleBean(KubernetesCatalogWatch.class);
-		});
+		applicationContextRunner.run(context ->
+			assertThat(context).hasSingleBean(KubernetesCatalogWatch.class));
 	}
 
 	/**
@@ -114,9 +113,8 @@ class KubernetesCatalogWatchAutoConfigurationTests {
 				"spring.cloud.discovery.blocking.enabled=true", "spring.cloud.discovery.reactive.enabled=false",
 				"spring.cloud.kubernetes.discovery.discovery-server-url=example.com",
 				"spring.cloud.kubernetes.http.discovery.catalog.watcher.enabled=true");
-		applicationContextRunner.run(context -> {
-			assertThat(context).hasSingleBean(KubernetesCatalogWatch.class);
-		});
+		applicationContextRunner.run(context ->
+			assertThat(context).hasSingleBean(KubernetesCatalogWatch.class));
 	}
 
 	/**

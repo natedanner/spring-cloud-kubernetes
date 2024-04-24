@@ -55,30 +55,30 @@ class Fabric8IstioIT {
 
 	private static Util util;
 
-	private static K3sContainer K3S;
+	private static K3sContainer k3s;
 
 	@BeforeAll
 	static void beforeAll() throws Exception {
-		K3S = Commons.container();
-		K3S.start();
-		util = new Util(K3S);
-		Commons.validateImage(IMAGE_NAME, K3S);
-		Commons.loadSpringCloudKubernetesImage(IMAGE_NAME, K3S);
+		k3s = Commons.container();
+		k3s.start();
+		util = new Util(k3s);
+		Commons.validateImage(IMAGE_NAME, k3s);
+		Commons.loadSpringCloudKubernetesImage(IMAGE_NAME, k3s);
 
-		Images.loadIstioctl(K3S);
+		Images.loadIstioctl(k3s);
 
-		processExecResult(K3S.execInContainer("sh", "-c", "kubectl create namespace istio-test"));
+		processExecResult(k3s.execInContainer("sh", "-c", "kubectl create namespace istio-test"));
 		processExecResult(
-				K3S.execInContainer("sh", "-c", "kubectl label namespace istio-test istio-injection=enabled"));
+				k3s.execInContainer("sh", "-c", "kubectl label namespace istio-test istio-injection=enabled"));
 
 		util.setUpIstioctl(NAMESPACE, Phase.CREATE);
 
 		String istioctlPodName = istioctlPodName();
-		K3S.execInContainer("sh", "-c",
+		k3s.execInContainer("sh", "-c",
 				"kubectl cp istio-test/" + istioctlPodName + ":/usr/local/bin/istioctl /tmp/istioctl");
-		K3S.execInContainer("sh", "-c", "chmod +x /tmp/istioctl");
+		k3s.execInContainer("sh", "-c", "chmod +x /tmp/istioctl");
 
-		processExecResult(K3S.execInContainer("sh", "-c",
+		processExecResult(k3s.execInContainer("sh", "-c",
 				"/tmp/istioctl" + " --kubeconfig=/etc/rancher/k3s/k3s.yaml install --set profile=minimal -y"));
 
 		util.setUpIstio(NAMESPACE);
@@ -89,7 +89,7 @@ class Fabric8IstioIT {
 	@AfterAll
 	static void afterAll() throws Exception {
 		util.deleteNamespace("istio-system");
-		Commons.cleanUp(IMAGE_NAME, K3S);
+		Commons.cleanUp(IMAGE_NAME, k3s);
 		Commons.systemPrune();
 	}
 
@@ -141,7 +141,7 @@ class Fabric8IstioIT {
 
 	private static String istioctlPodName() {
 		try {
-			return K3S
+			return k3s
 					.execInContainer("sh", "-c",
 							"kubectl get pods -n istio-test -l app=istio-ctl -o=name --no-headers | tr -d '\n'")
 					.getStdout().split("/")[1];

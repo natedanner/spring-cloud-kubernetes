@@ -59,7 +59,7 @@ class Fabric8ConfigServerBootstrapper extends KubernetesConfigServerBootstrapper
 		// create instance provider
 		registry.registerIfAbsent(ConfigServerInstanceProvider.Function.class, context -> {
 			if (!getDiscoveryEnabled(context)) {
-				return (id) -> Collections.emptyList();
+				return id -> Collections.emptyList();
 			}
 			if (context.isRegistered(KubernetesDiscoveryClient.class)) {
 				KubernetesDiscoveryClient client = context.get(KubernetesDiscoveryClient.class);

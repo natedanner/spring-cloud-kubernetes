@@ -33,9 +33,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class AppATestApplication implements ApplicationListener<RefreshRemoteApplicationEvent> {
 
-	private final Log LOG = LogFactory.getLog(getClass());
+	private final Log log = LogFactory.getLog(getClass());
 
-	private boolean value = false;
+	private boolean value;
 
 	public static void main(String[] args) {
 		SpringApplication.run(AppATestApplication.class, args);
@@ -43,13 +43,13 @@ public class AppATestApplication implements ApplicationListener<RefreshRemoteApp
 
 	@GetMapping("/app-a")
 	public boolean index() {
-		LOG.info("Current value: " + value);
+		log.info("Current value: " + value);
 		return value;
 	}
 
 	@Override
 	public void onApplicationEvent(RefreshRemoteApplicationEvent refreshRemoteApplicationEvent) {
-		LOG.info("Received remote refresh event from origin: " + refreshRemoteApplicationEvent.getOriginService()
+		log.info("Received remote refresh event from origin: " + refreshRemoteApplicationEvent.getOriginService()
 				+ " to destination : " + refreshRemoteApplicationEvent.getDestinationService());
 		this.value = true;
 	}
